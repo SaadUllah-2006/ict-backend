@@ -12,8 +12,9 @@ const app = express();
 // Connect to MongoDB on each request (cached — only actually connects once)
 app.use(async (req, res, next) => {
   try {
-    await connectDB();
+    await connectDB()
     next();
+     console.log("MongoDB Connected");
   } catch (err) {
     console.error('DB connection failed:', err.message);
     return res.status(503).json({ success: false, message: 'Database connection failed. Please try again.' });
@@ -57,13 +58,11 @@ app.get('/api/health', (req, res) => {
 // Error handler (must be last)
 app.use(errorHandler);
 
-// Server configuration — only listen locally, Vercel uses module.exports
-if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
-    console.log(`\n🚀 SSUET Event Portal Server running on http://localhost:${PORT}`);
-    console.log(`📦 Environment: ${process.env.NODE_ENV}`);
-  });
-}
+// Start server — works for local dev and cloud hosting (Render, etc.)
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`\n🚀 SSUET Event Portal Server running on http://localhost:${PORT}`);
+  console.log(`📦 Environment: ${process.env.NODE_ENV}`);
+});
 
 module.exports = app;
