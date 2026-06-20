@@ -5,8 +5,8 @@ const { protect, requireAdmin } = require('../middleware/auth');
 
 router.use(protect, requireAdmin);
 
-router.get('https://ict-frontend-sigma.vercel.app/stats', getStats);
-router.get('https://ict-frontend-sigma.vercel.app/students', getAllStudents);
-router.get('https://ict-frontend-sigma.vercel.app/reports', getReports);
+router.get('/stats', getStats);
+router.get('/students', getAllStudents);
+router.get('/reports', getReports);
 
 module.exports = router;
