@@ -12,8 +12,8 @@ const app = express();
 // Connect to MongoDB on each request (cached — only actually connects once)
 app.use(async (req, res, next) => {
   try {
-    await connectDB()
-        console.log("MongoDB Connected");
+    await connectDB();
+    console.log("MongoDB Connected");
     next();
 
   } catch (err) {
@@ -25,6 +25,7 @@ app.use(async (req, res, next) => {
 // Middleware
 const allowedOrigins = [
   process.env.FRONTEND_URL,
+  'https://ict-frontend-sigma.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000',
 ].filter(Boolean);
