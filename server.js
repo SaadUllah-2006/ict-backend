@@ -13,8 +13,9 @@ const app = express();
 app.use(async (req, res, next) => {
   try {
     await connectDB()
+        console.log("MongoDB Connected");
     next();
-     console.log("MongoDB Connected");
+
   } catch (err) {
     console.error('DB connection failed:', err.message);
     return res.status(503).json({ success: false, message: 'Database connection failed. Please try again.' });
