@@ -21,7 +21,14 @@ exports.register = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Email is already registered' });
     }
 
-    const student = await Student.create({ name, email, department, semester, password, phone });
+    const student = await Student.create({
+      name,
+      email,
+      department,
+      semester: Number(semester), // ensure it's a number
+      password,
+      phone
+    });
 
     const token = generateToken(student._id, 'student');
 
