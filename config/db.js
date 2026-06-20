@@ -1,20 +1,23 @@
 const mongoose = require('mongoose');
-const dns = require('dns');
 
-// Force Node.js c-ares to use public DNS servers (resolves SRV resolution issues on some local networks/Windows configurations)
-try {
-  dns.setServers(['1.1.1.1', '8.8.8.8']);
-} catch (e) {
-  console.warn('⚠️ Failed to set custom DNS servers:', e.message);
-}
+let isConnected = false;
 
 const connectDB = async () => {
+  if (isConnected) {
+    console.log('✅ Using existing MongoDB connection');
+    return;
+  }
+
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 10000, // 10 second timeout
+    });
+    isConnected = true;
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`❌ MongoDB Connection Error: ${error.message}`);
-    process.exit(1);
+    // Do NOT call process.exit(1) — it kills the Vercel serverless function
+    throw error; // Let the error bubble up to the request handler
   }
 };
 
